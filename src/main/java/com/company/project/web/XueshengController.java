@@ -1,17 +1,21 @@
 package com.company.project.web;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.company.project.core.Result;
 import com.company.project.core.ResultGenerator;
 import com.company.project.model.Xuesheng;
 import com.company.project.service.XueshengService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 /**
 * Created by CodeGenerator on 2019/03/25.
@@ -47,7 +51,17 @@ public class XueshengController {
     }
 
     @PostMapping("/list")
-    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
+    public Result list(@RequestParam(defaultValue = "0") Integer page,
+                       @RequestParam(defaultValue = "0") Integer size) {
+        PageHelper.startPage(page, size);
+        List<Xuesheng> list = xueshengService.findAll();
+        PageInfo pageInfo = new PageInfo(list);
+        return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    @GetMapping("/get")
+    public Result get(@RequestParam(defaultValue = "0") Integer page,
+                      @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
         List<Xuesheng> list = xueshengService.findAll();
         PageInfo pageInfo = new PageInfo(list);
